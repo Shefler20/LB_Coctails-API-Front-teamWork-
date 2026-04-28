@@ -1,0 +1,2 @@
+jira
+https://sashashefler9.atlassian.net/jira/software/projects/KAN/summary?atlOrigin=eyJpIjoiOGZkNzRmY2NkNDFmNGRmN2FlMDYxZjI0YTJmMDlhYWEiLCJwIjoiaiJ9
