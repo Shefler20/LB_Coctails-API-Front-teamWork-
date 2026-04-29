@@ -7,3 +7,4 @@ export interface UserFields {
     avatar?: string;
     displayName: string;
 }
+
