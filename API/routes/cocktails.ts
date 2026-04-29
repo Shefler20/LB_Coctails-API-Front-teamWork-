@@ -5,10 +5,10 @@ import mongoose from "mongoose";
 export const cocktailRouter = express.Router();
 
 cocktailRouter.get("/", async (req, res) => {
-  const query: { userId?: string } = {};
+  const query: { user?: string } = {};
 
-  if (req.query.userId) {
-    query.userId = req.query.userId as string;
+  if (req.query.user) {
+    query.user = req.query.user as string;
   }
 
   try {
