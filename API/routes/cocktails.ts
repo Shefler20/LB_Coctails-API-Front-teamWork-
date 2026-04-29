@@ -32,7 +32,7 @@ cocktailRouter.get("/:id", async (req, res) => {
   }
 
   try {
-    const cocktail = await Cocktail.findById(id).populate("ratings.user");
+    const cocktail = await Cocktail.findById(id).populate("ratings.user","displayName email role")
 
     if (!cocktail) {
       return res.status(404).send({error: "Cocktail not found"});
