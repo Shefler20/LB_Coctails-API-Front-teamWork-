@@ -1,15 +1,14 @@
 import express from "express";
 import User from "../models/User";
 import { Error } from "mongoose";
-import jwt from "jsonwebtoken";
 import config from "../config";
 import { imagesUpload } from "../middleware/multer";
 import { OAuth2Client } from "google-auth-library";
 
 
-const usersRouter = express.Router();
+const userRouter = express.Router();
 
-usersRouter.post("/", imagesUpload.single("avatar"), async (req, res, next) => {
+userRouter.post("/", imagesUpload.single("avatar"), async (req, res, next) => {
   const data = {
     email: req.body.email,
     password: req.body.password,
@@ -18,6 +17,7 @@ usersRouter.post("/", imagesUpload.single("avatar"), async (req, res, next) => {
   };
 
   try {
+    console.log(data);
     const user = new User(data);
     user.generateAuthToken();
     const saveUser = await user.save();
@@ -39,7 +39,7 @@ usersRouter.post("/", imagesUpload.single("avatar"), async (req, res, next) => {
 });
 
 // google register
-usersRouter.post("/google", async (req, res, next) => {
+userRouter.post("/google", async (req, res, next) => {
   try {
     if (!req.body.credential)
       return res.status(400).send({ error: "Credential is required" });
@@ -91,7 +91,7 @@ usersRouter.post("/google", async (req, res, next) => {
   }
 });
 
-usersRouter.post("/sessions", async (req, res, next) => {
+userRouter.post("/sessions", async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -129,9 +129,9 @@ usersRouter.post("/sessions", async (req, res, next) => {
 });
 
 // logout
-usersRouter.delete("/sessions", async (req, res, next) => {
+userRouter.delete("/sessions", async (req, res, next) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.cookies.token;
 
     if (refreshToken) {
       const user = await User.findOne({ token: refreshToken });
@@ -149,4 +149,4 @@ usersRouter.delete("/sessions", async (req, res, next) => {
 });
 
 
-export default usersRouter;
+export default userRouter;
