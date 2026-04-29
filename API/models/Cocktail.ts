@@ -55,7 +55,7 @@ const CocktailSchema = new Schema({
   },
   isPublished: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   ingredients: [IngredientSchema],
   ratings: [RatingSchema],
