@@ -6,5 +6,6 @@ const config = {
     rootPath,
     publicPath: path.join(rootPath, "public"),
     db: "mongodb://localhost/coctails-DB",
+    jwtSecret: process.env.JWT_SECRET || 'secret',
 };
 export default config;
