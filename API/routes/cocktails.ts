@@ -1,6 +1,6 @@
 import express from "express";
 import Cocktail from "../models/Cocktail";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import auth, {RequestWithUser} from "../middleware/auth";
 import {imagesUpload} from "../middleware/multer";
 
@@ -104,3 +104,48 @@ cocktailRouter.post("/", auth, imagesUpload.single("image"), async (req, res, ne
       }
     }
 );
+
+
+cocktailRouter.patch("/:id", auth, async (req, res, next) => {
+  const { user } = req as RequestWithUser;
+  const { id } = req.params;
+  const isValidId = mongoose.Types.ObjectId.isValid(id as string);
+
+  if (!id || !isValidId) {
+    return res.status(400).send({ error: "Invalid ID" });
+  }
+
+  if (!req.body?.rate) {
+    return res.status(400).send({ error: "Rate are required" });
+  }
+
+  try {
+    const cocktail = await Cocktail.findById(id);
+    if (!cocktail) {
+      return res.status(404).send({ error: "Cocktail not found" });
+    }
+
+    const isOldRate = cocktail.ratings.find(oldRate => String(oldRate.user) === String(user._id));
+
+    if (isOldRate) {
+      isOldRate.rating = req.body.rate;
+    } else {
+      const newRate: { user: mongoose.Types.ObjectId; rating: number } = {
+        user: user._id,
+        rating: req.body.rate,
+      };
+      cocktail.ratings.push(newRate);
+    }
+    await cocktail.save();
+
+    return res.send(cocktail);
+
+  } catch(e) {
+      console.log(e);
+      if (e instanceof mongoose.Error.ValidationError) {
+        return res.status(400).send(e);
+      }
+
+      next(e);
+  }
+});
