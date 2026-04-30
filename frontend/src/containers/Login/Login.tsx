@@ -6,8 +6,9 @@ import {LockOpen} from "@mui/icons-material";
 import {GoogleLogin} from "@react-oauth/google";
 import {toast} from "react-toastify";
 import type {LoginMutation} from "../../types";
-import {googleLogin, login} from "../../components/users/store/usersThunks.ts";
-import {selectLoginError, selectLoginLoading} from "../../components/users/store/usersSelectors.ts";
+import {selectLoginError, selectLoginLoading} from "../../features/users/usersSelectors.ts";
+import {googleLogin, login} from "../../features/users/usersThunks.ts";
+
 
 
 const Login = () => {

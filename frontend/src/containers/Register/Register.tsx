@@ -1,4 +1,4 @@
-import {Avatar, Box, Button, Container, Grid, TextField, Typography} from "@mui/material";
+import {Avatar, Box, Button, CircularProgress, Container, Grid, TextField, Typography} from "@mui/material";
 import { useState} from "react";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {Link, useNavigate} from "react-router-dom";
@@ -9,7 +9,7 @@ import {toast} from "react-toastify";
 import type { RegisterMutation } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { selectRegisterLoading, selectRegisterError } from "../../features/users/usersSelectors.ts";
-import { register } from "../../features/users/usersThunks.ts";
+import {googleLogin, register} from "../../features/users/usersThunks.ts";
 import Spinner from "../../components/Spinner/Spinner.tsx";
 
 
@@ -17,8 +17,6 @@ const Register = () => {
     const dispatch = useAppDispatch();
     const isRegisterLoading = useAppSelector(selectRegisterLoading);
     const registerError = useAppSelector(selectRegisterError);
-    // ошибки при регистрации отлов через селектор
-    // загрузка при регистрации
     const navigate = useNavigate();
 
     const [form, setForm] = useState<RegisterMutation>({
@@ -36,7 +34,6 @@ const Register = () => {
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            // запрос на отправку формы регистрации
             await dispatch(register(form)).unwrap();
             setForm({
                 email: "",
@@ -66,7 +63,7 @@ const Register = () => {
     };
 
     const googleLoginHandler = async (credential: string) => {
-        // логин через гугл
+        await dispatch(googleLogin(credential)).unwrap();
         navigate("/");
     };
 
@@ -103,7 +100,7 @@ const Register = () => {
                                     onChange={onInputChange}
                                     error={Boolean(getFieldError("email"))}
                                     helperText={getFieldError("email")}
-                                 /*   disabled={loadingRegister}*/
+                                    disabled={isRegisterLoading}
                                 />
                             </Grid>
                             <Grid size={{xs: 12}}>
@@ -119,7 +116,7 @@ const Register = () => {
                                     onChange={onInputChange}
                                     error={Boolean(getFieldError("displayName"))}
                                     helperText={getFieldError("displayName")}
-                                 /*   disabled={loadingRegister}*/
+                                    disabled={isRegisterLoading}
                                 />
                             </Grid>
                             <Grid size={{xs: 12}}>
@@ -135,7 +132,7 @@ const Register = () => {
                                     onChange={onInputChange}
                                     error={Boolean(getFieldError("password"))}
                                     helperText={getFieldError("password")}
-                                  /*  disabled={loadingRegister}*/
+                                    disabled={isRegisterLoading}
                                 />
                             </Grid>
                             <Grid size={{xs: 12}}>
@@ -148,8 +145,7 @@ const Register = () => {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
-                            {/*{loadingRegister ? <CircularProgress/> : "Sign Up"}*/}
+                            {isRegisterLoading ? <CircularProgress/> : "Sign Up"}
                         </Button>
                         <Box sx={{py:2}}>
                             <GoogleLogin
