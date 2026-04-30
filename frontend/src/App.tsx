@@ -28,7 +28,7 @@ const App = () => {
             <Route
               path="/cocktails/new"
               element={
-                <PrivateRoute>
+                <PrivateRoute isAllowed={!!user}>
                   <NewCocktail />
                 </PrivateRoute>
               }
@@ -36,7 +36,7 @@ const App = () => {
             <Route
               path="/cocktails/my"
               element={
-                <PrivateRoute>
+                <PrivateRoute isAllowed={!!user}>
                   <MyCocktail />
                 </PrivateRoute>
               }
@@ -46,7 +46,7 @@ const App = () => {
             <Route
               path="/admin"
               element={
-                <PrivateRoute>
+                <PrivateRoute isAllowed={user && user.role === "admin"}>
                   <AdminLayout />
                 </PrivateRoute>
               }
