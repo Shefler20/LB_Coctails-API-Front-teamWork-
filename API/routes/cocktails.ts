@@ -3,7 +3,6 @@ import Cocktail from "../models/Cocktail";
 import mongoose from "mongoose";
 import auth, {RequestWithUser} from "../middleware/auth";
 import {imagesUpload} from "../middleware/multer";
-import permit from "../middleware/permit";
 
 export const cocktailRouter = express.Router();
 
@@ -105,18 +104,3 @@ cocktailRouter.post("/", auth, imagesUpload.single("image"), async (req, res, ne
       }
     }
 );
-
-cocktailRouter.patch("/:id/togglePublished",auth, permit("admin") , async (req,res,next) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id as string)) return res.status(400).send({error: "Invalid Cocktail id"});
-  try {
-    const cocktail  = await Cocktail.findById(id);
-    if (!cocktail) return res.status(404).send({error: "Cocktail not found"});
-
-    cocktail.isPublished = !cocktail.isPublished;
-    await cocktail.save();
-    res.send({message: "Cocktail status updated"});
-  }catch (error) {
-    next(error);
-  }
-});
