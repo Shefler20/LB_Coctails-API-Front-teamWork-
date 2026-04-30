@@ -1,6 +1,6 @@
 import express from "express";
 import Cocktail from "../models/Cocktail";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import auth, {RequestWithUser} from "../middleware/auth";
 import {imagesUpload} from "../middleware/multer";
 
@@ -139,7 +139,6 @@ cocktailRouter.patch("/:id", auth, async (req, res, next) => {
     await cocktail.save();
 
     return res.send(cocktail);
-
   } catch(e) {
       console.log(e);
       if (e instanceof mongoose.Error.ValidationError) {
