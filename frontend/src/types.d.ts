@@ -6,3 +6,10 @@ interface User {
     avatar: string;
     displayName: string;
 }
+
+interface RegisterMutation {
+    email: string;
+    password: string;
+    avatar: File | null;
+    displayName: string;
+}
