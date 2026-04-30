@@ -71,6 +71,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
             >
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 <MenuItem component={NavLink} to={"/cocktails/my"}>My Cocktails</MenuItem>
+                {user && user.role === "admin" &&  <MenuItem component={NavLink} to={"/admin"}>Admin</MenuItem>}
             </Menu>
         </>
     );

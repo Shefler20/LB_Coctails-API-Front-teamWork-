@@ -51,7 +51,7 @@ export const createCocktail = createAsyncThunk<void, ICocktailMutation>(
 export const deleteCocktail = createAsyncThunk<void, string>(
   "cocktails/deleteCocktail",
   async (id) => {
-    await axiosApi.delete(`cocktails/${id}`);
+    await axiosApi.delete(`admin/cocktails/${id}`);
   }
 )
 
