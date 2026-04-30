@@ -9,10 +9,9 @@ import Register from "./containers/Register/Register.tsx";
 import NewCocktail from "./containers/NewCocktail/NewCocktail.tsx";
 import DetailCocktailInfo from "./containers/DetailCocktailInfo/DetailCocktailInfo.tsx";
 import MyCocktail from "./containers/MyCocktail/MyCocktail.tsx";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute.ts";
-import AdminPageCocktails from "./containers/AdminPageCocktails/AdminPageCocktails.ts";
-import AdminLayout from "./components/AdminLayout/AdminLayout.ts";
-
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import AdminPageCocktails from "./containers/AdminPageCocktails/AdminPageCocktails";
+import AdminLayout from "./components/AdminLayout/AdminLayout";
 const App = () => (
 
     <>
