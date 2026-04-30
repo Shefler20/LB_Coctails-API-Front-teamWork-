@@ -7,7 +7,7 @@ import {ToastContainer} from "react-toastify";
 import { persistor, store } from "./app/store.ts";
 import { PersistGate } from "redux-persist/integration/react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { GOOGLE_CLIENT_ID } from "./constants.ts";
+import { GOOGLE_CLIENT_ID } from './globalConst.ts';
 
 
 createRoot(document.getElementById("root")!).render(
