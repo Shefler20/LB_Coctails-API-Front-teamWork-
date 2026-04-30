@@ -60,10 +60,29 @@ export interface ICocktail {
   ratings: IRating[];
 }
 
+export interface ICocktailDetailInfo {
+  _id: string;
+  user: string;
+  title: string;
+  image: string;
+  receipt: string;
+  isPublished: boolean;
+  ingredients: IIngredient[];
+  ratings: IRating[];
+  averageRating: number;
+  ratingQuantity: number;
+}
+
 export interface ICocktailMutation {
   title: string;
-  image: File;
+  image: File | null;
   receipt: string;
   ingredients: IIngredient[];
+}
+
+export interface ICocktailWithoutIngredients {
+  title: string;
+  image: File | null;
+  receipt: string;
 }
 
