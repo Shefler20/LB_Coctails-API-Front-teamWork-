@@ -12,17 +12,19 @@ const Home = () => {
     const loading = useAppSelector(getLoadingAllCocktails);
     const user = useAppSelector(selectUser);
 
+    const filteredCocktails = allCocktails.filter(c => c.isPublished);
+
     useEffect(() => {
         dispatch(getAllCocktails());
     }, [dispatch]);
 
     return (
         <>
-            {allCocktails.length === 0 && <Typography variant="h6" sx={{mt:3, textAlign: "center"}}>No Cocktails yet</Typography>}
+            {!loading && filteredCocktails.length === 0 && <Typography variant="h6" sx={{mt:3, textAlign: "center"}}>No Cocktails yet</Typography>}
             {loading && (<LinearProgress />)}
-            {!loading && allCocktails.length > 0 && (
+            {!loading && filteredCocktails.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: "1rem", mt: 4, flexWrap: "wrap" }}>
-                    {allCocktails.map((c) => (
+                    {filteredCocktails.map((c) => (
                         <CardCocktail
                             key={c._id}
                             cocktail={c}
