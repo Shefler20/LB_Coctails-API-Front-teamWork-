@@ -3,6 +3,7 @@ import {NavLink} from "react-router-dom";
 import UserMenu from "./UserMenu/UserMenu.tsx";
 import AnonymousMenu from "./AnonimusMenu/AnonymousMenu.tsx";
 import * as React from "react";
+import type {User} from "../../types";
 
 interface Props {
     user: User | null;

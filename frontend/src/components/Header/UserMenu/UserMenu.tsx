@@ -2,6 +2,7 @@ import {Avatar, Button, Menu, MenuItem} from "@mui/material";
 import {useState} from "react";
 import {NavLink} from "react-router-dom";
 import {BASE_URL} from "../../../globalConst.ts";
+import type {User} from "../../../types";
 
 interface Props {
     user: User;

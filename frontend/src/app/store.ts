@@ -1,18 +1,26 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
-import { usersReducer } from "../components/users/store/usersSlice";
-import storage from "redux-persist/lib/storage";
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
+import {usersReducer} from "../components/users/store/usersSlice.ts";
 
 const userPersistConfig = {
-    key: 'store:users',
-    storage,
-    whitelist: ['user'],
+    key: 'store:user',
+    storage: {
+        getItem: (key: string) => Promise.resolve(localStorage.getItem(key)),
+        setItem: (key: string, value: string) => {
+            localStorage.setItem(key, value);
+            return Promise.resolve();
+        },
+        removeItem: (key: string) => {
+            localStorage.removeItem(key);
+            return Promise.resolve();
+        },
+    },
+    whitelist: ["user"],
 };
 
 const rootReducer = combineReducers({
     users: persistReducer(userPersistConfig, usersReducer),
-});
-
+})
 
 export const store = configureStore({
     reducer: rootReducer,
@@ -24,7 +32,7 @@ export const store = configureStore({
         }),
 });
 
-export const persistor = persistStore(store);
+export const persistor = persistStore(store)
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
