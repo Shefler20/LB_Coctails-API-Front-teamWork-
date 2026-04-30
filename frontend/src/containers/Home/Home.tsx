@@ -21,13 +21,12 @@ const Home = () => {
             {allCocktails.length === 0 && <Typography variant="h6" sx={{mt:3, textAlign: "center"}}>No Cocktails yet</Typography>}
             {loading && (<LinearProgress />)}
             {!loading && allCocktails.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: "1rem", mt: 4 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: "1rem", mt: 4, flexWrap: "wrap" }}>
                     {allCocktails.map((c) => (
                         <CardCocktail
                             key={c._id}
                             cocktail={c}
                             isOwner={!!user}
-                            isAdmin={user?.role === "admin"}
                         />
                     ))}
                 </Box>

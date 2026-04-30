@@ -15,7 +15,7 @@ import { BASE_URL, NO_IMAGE } from "../../globalConst.ts";
 interface Props {
     cocktail: ICocktail;
     isOwner: boolean;
-    isAdmin: boolean;
+    isAdmin?: boolean;
     showStatus?: boolean;
     onDelete?: (id: string) => void;
     published?: (id: string) => void;
