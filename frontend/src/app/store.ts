@@ -13,23 +13,33 @@ import {
 } from "redux-persist";
 
 const userPersistConfig = {
-  key: "store:users",
-  storage,
-  whitelist: ["user"],
+    key: 'store:user',
+    storage: {
+        getItem: (key: string) => Promise.resolve(localStorage.getItem(key)),
+        setItem: (key: string, value: string) => {
+            localStorage.setItem(key, value);
+            return Promise.resolve();
+        },
+        removeItem: (key: string) => {
+            localStorage.removeItem(key);
+            return Promise.resolve();
+        },
+    },
+    whitelist: ["user"],
 };
 
 const rootReducer = combineReducers({
-  users: persistReducer(userPersistConfig, usersReducer),
+    users: persistReducer(userPersistConfig, usersReducer),
 });
 
 export const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }),
 });
 
 export const persistor = persistStore(store);
