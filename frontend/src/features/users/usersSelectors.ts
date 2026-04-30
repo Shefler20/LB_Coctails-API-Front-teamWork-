@@ -1,4 +1,4 @@
-import type {RootState} from "../../../app/store.ts";
+import type { RootState } from "../../app/store";
 
 export const selectUser = (state: RootState) => state.users.user;
 export const selectRegisterLoading = (state: RootState) => state.users.registerLoading;

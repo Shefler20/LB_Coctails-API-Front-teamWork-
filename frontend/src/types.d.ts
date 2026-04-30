@@ -35,3 +35,34 @@ export interface LoginMutation {
   password: string;
 }
 
+export interface IIngredient {
+  title: string;
+  quantity: string;
+}
+
+export interface IRating {
+  user: {
+    displayName: string;
+    email: string;
+    role: string;
+  };
+  rating: number;
+}
+
+export interface ICocktail {
+  user: string;
+  title: string;
+  image: string;
+  receipt: string;
+  isPublished: boolean;
+  ingredients: IIngredient[];
+  ratings: IRating[];
+}
+
+export interface ICocktailMutation {
+  title: string;
+  image: File;
+  receipt: string;
+  ingredients: IIngredient[];
+}
+

@@ -7,7 +7,7 @@ const PageNotFound = () => {
         <>
             <Container maxWidth="sm" sx={{ mt: 10 }}>
                 <Paper elevation={3} sx={{ p: 4, textAlign: "center" }}>
-                    <Stack spacing={2} alignItems="center">
+                    <Stack spacing={2} sx={{alignItems: "center"}}>
                         <Typography variant="h1" color="error">
                             404
                         </Typography>
