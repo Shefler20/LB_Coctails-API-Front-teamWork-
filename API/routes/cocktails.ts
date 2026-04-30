@@ -1,14 +1,16 @@
 import express from "express";
 import Cocktail from "../models/Cocktail";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
+import auth, {RequestWithUser} from "../middleware/auth";
+import {imagesUpload} from "../middleware/multer";
 
 export const cocktailRouter = express.Router();
 
 cocktailRouter.get("/", async (req, res) => {
-  const query: { userId?: string } = {};
+  const query: { user?: string } = {};
 
-  if (req.query.userId) {
-    query.userId = req.query.userId as string;
+  if (req.query.user) {
+    query.user = req.query.user as string;
   }
 
   try {
@@ -29,7 +31,7 @@ cocktailRouter.get("/:id", async (req, res) => {
   }
 
   try {
-    const cocktail = await Cocktail.findById(id).populate("ratings.user");
+    const cocktail = await Cocktail.findById(id).populate("ratings.user","displayName email role")
 
     if (!cocktail) {
       return res.status(404).send({error: "Cocktail not found"});
@@ -48,3 +50,102 @@ cocktailRouter.get("/:id", async (req, res) => {
     res.status(500);
   }
 })
+
+cocktailRouter.post("/", auth, imagesUpload.single("image"), async (req, res, next) => {
+      const { user } = req as RequestWithUser;
+
+      try {
+        if (!req.body?.title || !req.body?.receipt) {
+          return res.status(400).send({ error: "Title and receipt are required" });
+        }
+
+        if (!req.file) {
+          return res.status(400).send({ error: "Image is required" });
+        }
+
+        if (!req.body.ingredients) {
+          return res.status(400).send({ error: "Ingredients are required" });
+        }
+        let ingredients: { title: string; quantity: string }[];
+        try {
+          ingredients =
+              typeof req.body.ingredients === "string"
+                  ? JSON.parse(req.body.ingredients)
+                  : req.body.ingredients;
+        } catch {
+          return res.status(400).send({ error: "Invalid ingredients format" });
+        }
+
+        if (!Array.isArray(ingredients) || ingredients.length === 0) {
+          return res.status(400).send({ error: "Ingredients are required" });
+        }
+
+        if (!ingredients.every(i => i.title && i.quantity)) {
+          return res.status(400).send({ error: "Invalid ingredients" });
+        }
+
+        const newCocktail = new Cocktail({
+          user: user._id,
+          title: req.body.title,
+          receipt: req.body.receipt,
+          image: "images/" + req.file.filename,
+          ingredients,
+          ratings: [],
+        });
+
+        await newCocktail.save();
+        res.send(newCocktail);
+      } catch (e) {
+        if (e instanceof mongoose.Error.ValidationError) {
+          return res.status(400).send(e);
+        }
+
+        next(e);
+      }
+    }
+);
+
+
+cocktailRouter.patch("/:id", auth, async (req, res, next) => {
+  const { user } = req as RequestWithUser;
+  const { id } = req.params;
+  const isValidId = mongoose.Types.ObjectId.isValid(id as string);
+
+  if (!id || !isValidId) {
+    return res.status(400).send({ error: "Invalid ID" });
+  }
+
+  if (!req.body?.rate) {
+    return res.status(400).send({ error: "Rate are required" });
+  }
+
+  try {
+    const cocktail = await Cocktail.findById(id);
+    if (!cocktail) {
+      return res.status(404).send({ error: "Cocktail not found" });
+    }
+
+    const isOldRate = cocktail.ratings.find(oldRate => String(oldRate.user) === String(user._id));
+
+    if (isOldRate) {
+      isOldRate.rating = req.body.rate;
+    } else {
+      const newRate: { user: mongoose.Types.ObjectId; rating: number } = {
+        user: user._id,
+        rating: req.body.rate,
+      };
+      cocktail.ratings.push(newRate);
+    }
+    await cocktail.save();
+
+    return res.send(cocktail);
+
+  } catch(e) {
+      console.log(e);
+      if (e instanceof mongoose.Error.ValidationError) {
+        return res.status(400).send(e);
+      }
+
+      next(e);
+  }
+});

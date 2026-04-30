@@ -55,10 +55,16 @@ const CocktailSchema = new Schema({
   },
   isPublished: {
     type: Boolean,
+    default: false,
+  },
+  ingredients: {
+    type: [IngredientSchema],
     required: true,
   },
-  ingredients: [IngredientSchema],
-  ratings: [RatingSchema],
+  ratings: {
+    type: [RatingSchema],
+    required: true,
+  },
 });
 
 const Cocktail = mongoose.model("Cocktail", CocktailSchema);
