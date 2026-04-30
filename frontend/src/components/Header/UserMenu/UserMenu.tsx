@@ -2,12 +2,17 @@ import {Avatar, Button, Menu, MenuItem} from "@mui/material";
 import {useState} from "react";
 import {NavLink} from "react-router-dom";
 import {BASE_URL} from "../../../globalConst.ts";
+import type { User } from "../../../types";
+import { logout } from "../../../features/users/usersThunks.ts";
+import { useAppDispatch } from "../../../app/hooks.ts";
+
 
 interface Props {
     user: User;
 }
 
 const UserMenu: React.FC<Props> = ({user}) => {
+    const dispatch = useAppDispatch();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [anchorEl2, setAnchorEl2] = useState<HTMLElement | null>(null);
 
@@ -27,8 +32,8 @@ const UserMenu: React.FC<Props> = ({user}) => {
         setAnchorEl2(null);
     };
 
-    const handleLogout = () => {
-        //вызов диспатча (logout)
+    const handleLogout = async () => {
+        await dispatch(logout());
         console.log("logout");
     };
     return (

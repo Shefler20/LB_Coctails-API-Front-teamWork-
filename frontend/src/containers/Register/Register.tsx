@@ -1,14 +1,22 @@
 import {Avatar, Box, Button, Container, Grid, TextField, Typography} from "@mui/material";
-import {useState} from "react";
+import { useState} from "react";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {Link, useNavigate} from "react-router-dom";
 import FileInput from "../../UI/FileInput.tsx";
 import * as React from "react";
 import {GoogleLogin} from "@react-oauth/google";
 import {toast} from "react-toastify";
+import type { RegisterMutation } from "../../types";
+import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
+import { selectRegisterLoading, selectRegisterError } from "../../features/users/usersSelectors.ts";
+import { register } from "../../features/users/usersThunks.ts";
+import Spinner from "../../components/Spinner/Spinner.tsx";
 
 
 const Register = () => {
+    const dispatch = useAppDispatch();
+    const isRegisterLoading = useAppSelector(selectRegisterLoading);
+    const registerError = useAppSelector(selectRegisterError);
     // ошибки при регистрации отлов через селектор
     // загрузка при регистрации
     const navigate = useNavigate();
@@ -29,6 +37,7 @@ const Register = () => {
         e.preventDefault();
         try {
             // запрос на отправку формы регистрации
+            await dispatch(register(form)).unwrap();
             setForm({
                 email: "",
                 password: "",
@@ -41,12 +50,12 @@ const Register = () => {
         }
     };
 
-    const getFieldError = (fieldError: string) => {
-        try {
-            // отлов ошибок
-        }catch {
-            return undefined;
-        }
+    const getFieldError = (fieldName: string) => {
+      try {
+        return registerError?.errors[fieldName].message;
+      } catch {
+        return undefined;
+      }
     };
 
     const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,9 +69,11 @@ const Register = () => {
         // логин через гугл
         navigate("/");
     };
+
     return (
         <>
             <Container component="main" maxWidth="xs">
+                {isRegisterLoading && <Spinner/>}
                 <Box
                     sx={{
                         marginTop: 8,

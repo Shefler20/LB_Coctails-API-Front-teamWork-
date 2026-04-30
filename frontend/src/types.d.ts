@@ -26,7 +26,7 @@ export interface GlobalError {
 export interface RegisterMutation {
   email: string;
   password: string;
-  avatar?: string;
+  avatar: File | null;
   displayName: string;
 }
 

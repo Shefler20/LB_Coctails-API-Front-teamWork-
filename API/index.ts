@@ -10,7 +10,7 @@ import {cocktailRouter} from "./routes/cocktails";
 import adminRouter from "./routes/admin";
 
 const app = express();
-const port = 8001;
+const port = 8000;
 
 app.use(cookieParser());
 app.use(express.json());

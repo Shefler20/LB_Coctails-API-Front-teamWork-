@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import axiosApi from "../../../axiosApi.ts";
-import type {GlobalError, LoginMutation, RegisterMutation, User, ValidationError} from "../../../types";
+import axiosApi from "../../axiosApi.ts";
+import type {GlobalError, LoginMutation, RegisterMutation, User, ValidationError} from "../../types";
 import {isAxiosError} from "axios";
 import {toast} from "react-toastify";
 
@@ -14,7 +14,7 @@ export const register = createAsyncThunk<User, RegisterMutation, {rejectValue: V
         keys.forEach(key => {
             const value = registerMutation[key];
 
-            if (value !== null) formData.append(key, value);
+            if (value && value !== null) formData.append(key, value);
         });
 
         try {
@@ -65,7 +65,7 @@ export const googleLogin = createAsyncThunk<User, string, {rejectValue: GlobalEr
 );
 
 export const logout = createAsyncThunk<void, void>(
-    'users/logout',
+    'users/sessions',
     async () => {
         const response = await axiosApi.delete<{message: string}>('/users/sessions');
         toast.success(response.data.message);
