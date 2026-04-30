@@ -50,6 +50,7 @@ export interface IRating {
 }
 
 export interface ICocktail {
+  _id: string;
   user: string;
   title: string;
   image: string;
