@@ -7,6 +7,7 @@ import config from "./config";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user";
 import {cocktailRouter} from "./routes/cocktails";
+import adminRouter from "./routes/admin";
 
 const app = express();
 const port = 8001;
@@ -21,6 +22,7 @@ app.use(cors({
 
 app.use("/users", userRouter);
 app.use("/cocktails", cocktailRouter);
+app.use("/admin", adminRouter);
 
 const run = async () => {
     await mongoose.connect(config.db);
