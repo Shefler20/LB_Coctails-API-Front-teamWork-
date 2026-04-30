@@ -1,7 +1,6 @@
-import type {ICocktail, ValidationError} from "../../types";
+import type {ICocktail, ICocktailDetailInfo} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
 import {
-  createCocktail,
   createCocktailRating,
   deleteCocktail,
   getAllCocktails,
@@ -11,13 +10,12 @@ import {
 
 interface CocktailsSliceState {
   cocktails: ICocktail[];
-  cocktailDetail: ICocktail | null;
+  cocktailDetail: ICocktailDetailInfo | null;
   getAllLoading: boolean;
   createLoading: boolean;
   deleteLoading: boolean;
   patchLoading: boolean;
   publicateLoading: boolean;
-  validationError: ValidationError | null;
 }
 
 const initialState: CocktailsSliceState = {
@@ -28,7 +26,6 @@ const initialState: CocktailsSliceState = {
   deleteLoading: false,
   patchLoading: false,
   publicateLoading: false,
-  validationError: null,
 }
 
 const cocktailsSlice = createSlice({
@@ -58,18 +55,6 @@ const cocktailsSlice = createSlice({
       state.getAllLoading = false;
     });
 
-    builder.addCase(createCocktail.pending, (state) => {
-      state.createLoading = true;
-      state.validationError = null;
-    });
-    builder.addCase(createCocktail.fulfilled, (state) => {
-      state.createLoading = false;
-    });
-    builder.addCase(createCocktail.rejected, (state, {payload: error}) => {
-      state.createLoading = false;
-      state.validationError = error || null;
-    });
-
     builder.addCase(deleteCocktail.pending, (state) => {
       state.deleteLoading = true;
     });
@@ -93,7 +78,7 @@ const cocktailsSlice = createSlice({
     builder.addCase(createCocktailRating.pending, (state) => {
       state.patchLoading = true;
     });
-    builder.addCase(createCocktailRating.fulfilled, (state,{payload: cocktailDetail}) => {
+    builder.addCase(createCocktailRating.fulfilled, (state, {payload: cocktailDetail}) => {
       state.patchLoading = false;
       state.cocktailDetail = cocktailDetail
     });
