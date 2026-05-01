@@ -41,7 +41,7 @@ const App = () => {
                 </PrivateRoute>
               }
             />
-            <Route path="/cocktail/:id" element={<DetailCocktailInfo />} />
+            <Route path="/cocktail/:id" element={<DetailCocktailInfo user={user}/>} />
 
             <Route
               path="/admin"
