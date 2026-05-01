@@ -42,6 +42,7 @@ export interface IIngredient {
 
 export interface IRating {
   user: {
+    _id: string;
     displayName: string;
     email: string;
     role: string;

@@ -19,10 +19,13 @@ import CircleIcon from "@mui/icons-material/Circle";import ReceiptLongOutlinedIc
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import Rating from '@mui/material/Rating';
 import Spinner from "../../components/Spinner/Spinner";
+import type { User } from "../../types";
 
+interface Props {
+  user: User | null;
+}
 
-
-const DetailCocktailInfo = () => {
+const DetailCocktailInfo: React.FC<Props> = ({ user }) => {
     const { id } = useParams();
     const dispatch = useAppDispatch();
     const detailCoctail = useAppSelector(getDetailCocktail);
@@ -31,6 +34,7 @@ const DetailCocktailInfo = () => {
     const [rating, setRating] = useState<number | null>(null);
 
     const changeRating = (newRating: number | null) => {
+      setRating(newRating);
         if (newRating !== null && id) {
             try {
                 dispatch(createCocktailRating({ id, rating: newRating })).unwrap();
@@ -41,8 +45,11 @@ const DetailCocktailInfo = () => {
     };
 
     useEffect(() => {
-        if (detailCoctail) setRating(Math.floor(detailCoctail.averageRating));
-    }, [detailCoctail?.averageRating])
+        if (detailCoctail && user) {
+          const currentRating = detailCoctail.ratings.find(rate => rate.user._id === user._id);
+          if (currentRating) setRating(currentRating.rating);
+        }
+    }, [detailCoctail, user])
 
     useEffect(() => {
         if (id) dispatch(getDetailCocktails(id));
