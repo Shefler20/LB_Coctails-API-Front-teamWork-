@@ -53,7 +53,7 @@ const DetailCocktailInfo: React.FC<Props> = ({ user }) => {
 
     useEffect(() => {
         if (id) dispatch(getDetailCocktails(id));
-    }, [dispatch]);
+    }, [dispatch, id]);
 
     return (
       <>
@@ -120,7 +120,7 @@ const DetailCocktailInfo: React.FC<Props> = ({ user }) => {
               <Rating
                 name="simple-controlled"
                 value={rating}
-                onChange={(event, newValue) => {
+                onChange={(_event, newValue) => {
                   changeRating(newValue);
                 }}
               />
