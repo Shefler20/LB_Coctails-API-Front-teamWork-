@@ -4,6 +4,7 @@ import {
   createCocktailRating,
   deleteCocktail,
   getAllCocktails,
+  getAllAdminCocktails,
   getDetailCocktails,
   publicateCocktail
 } from "./cocktailsThunks.ts";
@@ -41,6 +42,20 @@ const cocktailsSlice = createSlice({
       state.cocktails = cocktails;
     });
     builder.addCase(getAllCocktails.rejected, (state) => {
+      state.getAllLoading = false;
+    });
+
+    builder.addCase(getAllAdminCocktails.pending, (state) => {
+      state.getAllLoading = true;
+    });
+    builder.addCase(
+      getAllAdminCocktails.fulfilled,
+      (state, { payload: cocktails }) => {
+        state.getAllLoading = false;
+        state.cocktails = cocktails;
+      },
+    );
+    builder.addCase(getAllAdminCocktails.rejected, (state) => {
       state.getAllLoading = false;
     });
 

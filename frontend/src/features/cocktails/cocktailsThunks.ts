@@ -16,6 +16,17 @@ export const getAllCocktails = createAsyncThunk<ICocktail[], string | void>(
   }
 );
 
+export const getAllAdminCocktails = createAsyncThunk<ICocktail[]>(
+  "cocktails/getAllAdminCocktails",
+  async () => {
+    const { data: cocktails } = await axiosApi<ICocktail[]>(
+      "admin/cocktails",
+    );
+
+    return cocktails;
+  },
+);
+
 export const getDetailCocktails = createAsyncThunk<ICocktailDetailInfo, string>(
   "cocktails/getDetailCocktails",
   async (cocktailId) => {

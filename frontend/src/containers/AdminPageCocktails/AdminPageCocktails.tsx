@@ -6,7 +6,7 @@ import {
 } from "../../features/cocktails/cocktailsSelectors.ts";
 import {selectUser} from "../../features/users/usersSelectors.ts";
 import {useEffect} from "react";
-import {deleteCocktail, getAllCocktails, publicateCocktail} from "../../features/cocktails/cocktailsThunks.ts";
+import {deleteCocktail, getAllAdminCocktails, publicateCocktail} from "../../features/cocktails/cocktailsThunks.ts";
 import {Box, LinearProgress, Typography} from "@mui/material";
 import CardCocktail from "../../components/CardCocktail/CardCocktail.tsx";
 
@@ -20,17 +20,17 @@ const AdminPageCocktails = () => {
     const togglePublishedCocktailLoading = useAppSelector(getLoadingPublicateCocktail);
 
     useEffect(() => {
-        dispatch(getAllCocktails());
+        dispatch(getAllAdminCocktails());
     }, [dispatch]);
 
     const published = async (id: string) => {
         await dispatch(publicateCocktail(id));
-        await dispatch(getAllCocktails());
+        await dispatch(getAllAdminCocktails());
     };
 
     const onDelete = async (id: string) => {
         await dispatch(deleteCocktail(id));
-        await dispatch(getAllCocktails());
+        await dispatch(getAllAdminCocktails());
     };
 
     return (

@@ -4,6 +4,22 @@ import Cocktail from "../../models/Cocktail";
 
 export const cocktailAdminRouter = express.Router();
 
+cocktailAdminRouter.get("/", async (req, res) => {
+  const query: {user?: string} = {};
+
+  if (req.query.user) {
+    query.user = req.query.user as string;
+  }
+
+  try {
+    const cocktails = await Cocktail.find(query).select("-receipt");
+
+    res.send(cocktails);
+  } catch {
+    res.status(500);
+  }
+});
+
 
 cocktailAdminRouter.patch("/:id/togglePublished", async (req, res, next) => {
   const { id } = req.params;

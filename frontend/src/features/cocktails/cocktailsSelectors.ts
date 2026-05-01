@@ -7,4 +7,3 @@ export const getLoadingCreateCocktail = (state: RootState) => state.cocktails.cr
 export const getLoadingDeleteCocktail = (state: RootState) => state.cocktails.deleteLoading;
 export const getLoadingPublicateCocktail = (state: RootState) => state.cocktails.publicateLoading;
 export const getLoadingRatingCocktail = (state: RootState) => state.cocktails.patchLoading;
-export const getErrorValidation = (state: RootState) => state.cocktails.validationError;

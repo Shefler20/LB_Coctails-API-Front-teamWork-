@@ -7,10 +7,11 @@ import {imagesUpload} from "../middleware/multer";
 export const cocktailRouter = express.Router();
 
 cocktailRouter.get("/", async (req, res) => {
-  const query: { user?: string } = {};
+  const query: { isPublished?: boolean; user?: string } = { isPublished: true };
 
   if (req.query.user) {
     query.user = req.query.user as string;
+    delete query.isPublished;
   }
 
   try {
@@ -20,7 +21,7 @@ cocktailRouter.get("/", async (req, res) => {
   } catch {
     res.status(500);
   }
-})
+});
 
 cocktailRouter.get("/:id", async (req, res) => {
   const {id} = req.params;
@@ -115,8 +116,8 @@ cocktailRouter.patch("/:id", auth, async (req, res, next) => {
     return res.status(400).send({ error: "Invalid ID" });
   }
 
-  if (!req.body?.rate) {
-    return res.status(400).send({ error: "Rate are required" });
+  if (!req.body?.rating) {
+    return res.status(400).send({ error: "Rating are required" });
   }
 
   try {
@@ -128,17 +129,30 @@ cocktailRouter.patch("/:id", auth, async (req, res, next) => {
     const isOldRate = cocktail.ratings.find(oldRate => String(oldRate.user) === String(user._id));
 
     if (isOldRate) {
-      isOldRate.rating = req.body.rate;
+      isOldRate.rating = req.body.rating;
     } else {
       const newRate: { user: mongoose.Types.ObjectId; rating: number } = {
         user: user._id,
-        rating: req.body.rate,
+        rating: req.body.rating,
       };
       cocktail.ratings.push(newRate);
     }
     await cocktail.save();
 
-    return res.send(cocktail);
+    const cocktailObj = cocktail.toObject();
+    const sumRating = cocktail.ratings.reduce(
+      (acc, rate) => acc + rate.rating,
+      0,
+    );
+    const averageRating =
+      cocktail.ratings.length > 0 ? sumRating / cocktail.ratings.length : 0;
+    const modifiedDetailCocktail = {
+      ...cocktailObj,
+      averageRating,
+      ratingQuantity: cocktail.ratings.length,
+    };
+
+    return res.send(modifiedDetailCocktail);
   } catch(e) {
       console.log(e);
       if (e instanceof mongoose.Error.ValidationError) {
