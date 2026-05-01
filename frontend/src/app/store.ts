@@ -1,18 +1,37 @@
-import {combineReducers, configureStore} from "@reduxjs/toolkit";
-import { usersReducer } from "../components/users/store/usersSlice";
-import storage from "redux-persist/lib/storage";
-import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { usersReducer } from "../features/users/usersSlice";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
+import {cocktailsReducer} from "../features/cocktails/cocktailsSlice.ts";
 
 const userPersistConfig = {
-    key: 'store:users',
-    storage,
-    whitelist: ['user'],
+    key: 'store:user',
+    storage: {
+        getItem: (key: string) => Promise.resolve(localStorage.getItem(key)),
+        setItem: (key: string, value: string) => {
+            localStorage.setItem(key, value);
+            return Promise.resolve();
+        },
+        removeItem: (key: string) => {
+            localStorage.removeItem(key);
+            return Promise.resolve();
+        },
+    },
+    whitelist: ["user"],
 };
 
 const rootReducer = combineReducers({
     users: persistReducer(userPersistConfig, usersReducer),
+    cocktails: cocktailsReducer
 });
-
 
 export const store = configureStore({
     reducer: rootReducer,

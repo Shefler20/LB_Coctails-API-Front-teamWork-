@@ -1,4 +1,4 @@
-import type { GlobalError, User, ValidationError } from "../../../types";
+import type { GlobalError, User, ValidationError } from "../../types";
 import { createSlice } from "@reduxjs/toolkit";
 import { googleLogin, login, logout, register } from "./usersThunks.ts";
 

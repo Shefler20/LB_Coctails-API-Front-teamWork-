@@ -17,7 +17,6 @@ userRouter.post("/", imagesUpload.single("avatar"), async (req, res, next) => {
   };
 
   try {
-    console.log(data);
     const user = new User(data);
     user.generateAuthToken();
     const saveUser = await user.save();
